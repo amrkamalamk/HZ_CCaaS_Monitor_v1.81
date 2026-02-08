@@ -1,18 +1,33 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { UnifiedDataPoint, AgentPerformance, InteractionRecord } from './types';
+import { UnifiedDataPoint, GenesysCredentials, AgentPerformance, WrapUpData, BranchData, CallerData, ReasonBranchData, CustomerConversation, InteractionRecord } from './types';
 import { 
+  GENESYS_ORG_DEFAULT, 
+  GENESYS_REGION_DEFAULT, 
   MOS_THRESHOLD_DEFAULT, 
   POLLING_INTERVAL_MS,
-  QUEUE_NAME_DEFAULT 
+  QUEUE_NAME_DEFAULT,
+  DEFAULT_CLIENT_ID,
+  DEFAULT_CLIENT_SECRET,
+  DEFAULT_PROXY
 } from './constants';
-import { fetchRealtimeMetrics, getQueueIdByName, fetchRecentInteractions } from './services/genesysService';
+import { fetchRealtimeMetrics, getQueueIdByName, clearToken, fetchRecentInteractions } from './services/genesysService';
 import { analyzeMOSPerformance } from './services/geminiService';
 import MOSChart from './components/MOSChart';
-import UnifiedDashboardChart from './components/UnifiedDashboardChart';
 import AgentPerformanceTable from './components/AgentPerformanceTable';
+import UnifiedDashboardChart from './components/UnifiedDashboardChart';
+import WrapUpChart from './components/WrapUpChart';
+import BranchChart from './components/BranchChart';
+import TopCallersChart from './components/TopCallersChart';
+import AHTChart from './components/AHTChart';
+import AgentsChart from './components/AgentsChart';
+import PlannerTab from './components/PlannerTab';
+import ReasonsBranchTab from './components/ReasonsBranchTab';
+import CustomersTab from './components/CustomersTab';
+import RecordingsView from './components/RecordingsView';
 
-type SubTabType = 'summary' | 'charts' | 'agents' | 'aiforensics';
+type TabType = 'interval' | 'daily';
+type SubTabType = 'summary' | 'charts' | 'agents' | 'wrapup' | 'branches' | 'reasonsbranch' | 'topcallers' | 'customers' | 'recordings' | 'planner' | 'aiforensics';
 
 const getRAGColor = (type: 'mos' | 'sl' | 'abandoned', value: number | null, offered?: number) => {
   if (value === null) return 'text-slate-400';
@@ -25,9 +40,9 @@ const getRAGColor = (type: 'mos' | 'sl' | 'abandoned', value: number | null, off
   return 'text-slate-900';
 }
 
-const KPIBox = ({ label, value, icon, color }: { label: string, value: React.ReactNode, icon: string, color: string }) => (
-  <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center transition-all hover:shadow-md">
-    <div className="w-10 h-10 rounded-full flex items-center justify-center mb-2 bg-slate-50">
+const KPIBox = ({ label, value, icon, color, bg = "bg-white" }: { label: string, value: React.ReactNode, icon: string, color: string, bg?: string }) => (
+  <div className={`${bg} p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center transition-all hover:shadow-md`}>
+    <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 bg-slate-50`}>
       <i className={`fa-solid ${icon} ${color} text-sm`}></i>
     </div>
     <p className="text-[10px] font-bold uppercase text-slate-400 mb-1 tracking-wider">{label}</p>
