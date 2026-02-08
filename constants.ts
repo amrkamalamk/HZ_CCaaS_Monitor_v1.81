@@ -8,8 +8,8 @@ export const POLLING_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 export const QUEUE_NAME_DEFAULT = 'Super Chicken';
 
 // Defaults for the UI forms
-export const DEFAULT_CLIENT_ID = '';
-export const DEFAULT_CLIENT_SECRET = '';
+export const DEFAULT_CLIENT_ID = '86811fc2-d29b-49bc-964a-4519c51cce06';
+export const DEFAULT_CLIENT_SECRET = 'aFKakXuTWG3TmrlRCU6Tsf1pfUQ0ZZ8_iKteTXObrs0';
 export const DEFAULT_PROXY = '/api/genesys/proxy';
 
 /**
