@@ -1,6 +1,5 @@
-
 import React, { useState, useMemo } from 'react';
-import * as XLSX from 'https://esm.sh/xlsx';
+import * as XLSX from 'xlsx';
 
 interface ForecastInterval {
   hour: number;
@@ -66,7 +65,7 @@ const PlannerTab: React.FC<{ queueId: string }> = () => {
     } else {
       const factor = (ratio - 0.5) * 2;
       r = Math.round(250 + (239 - 250) * factor);
-      g = Math.round(204 + (68 - 204) * factor);
+      g = Math.round(204 + (63 - 204) * factor);
       b = Math.round(21 + (68 - 21) * factor);
     }
     return `rgb(${r}, ${g}, ${b})`;
